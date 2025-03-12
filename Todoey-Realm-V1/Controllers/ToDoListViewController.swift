@@ -12,6 +12,7 @@ import ChameleonFramework
 
 class ToDoListViewController: SwipeTableViewController  {
     
+    @IBOutlet weak var searchBar: UISearchBar!
     //    var itemArray = [Item]()
     var toDoItems: Results<Item>?
     let realm = try! Realm()
@@ -29,6 +30,192 @@ class ToDoListViewController: SwipeTableViewController  {
         super.viewDidLoad()
         tableView.separatorStyle = .none
     }
+//    
+//    override func viewWillAppear(_ animated: Bool) {
+//        if let colorHex = selectedCategory?.color {
+//            guard let navBar = navigationController?.navigationBar else {
+//                fatalError("Navigation bar error")
+//            }
+//            //            guard let navBar = navigationController?.navigationBar.scrollEdgeAppearance else {fatalError("Navigation controller does not exist.")}
+//            title = selectedCategory?.title
+//            if let color = UIColor(hexString: colorHex){
+//                navBar.scrollEdgeAppearance?.backgroundColor = color
+//                navBar.standardAppearance.backgroundColor = color
+//                searchBar.backgroundColor = color
+//                navBar.tintColor = ContrastColorOf(color, returnFlat: true)
+//                navBar.largeTitleTextAttributes = [
+//                    NSAttributedString.Key.foregroundColor: ContrastColorOf(color, returnFlat: true)
+//                ]
+//                navBar.titleTextAttributes = [
+//                    NSAttributedString.Key.foregroundColor: ContrastColorOf(color, returnFlat: true)
+//                ]
+//            }
+//            
+//        }
+//        
+//    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let colorHex = selectedCategory?.color {
+            guard let navBar = navigationController?.navigationBar else {
+                fatalError("Navigation bar error")
+            }
+            
+            title = selectedCategory?.title
+            
+            if let color = UIColor(hexString: colorHex) {
+                let contrastColor = ContrastColorOf(color, returnFlat: true)
+
+                // Configure UINavigationBarAppearance for iOS 13+
+                let appearance = UINavigationBarAppearance()
+                appearance.configureWithOpaqueBackground()
+                appearance.backgroundColor = color
+//                appearance.titleTextAttributes = [.foregroundColor: contrastColor]
+                appearance.largeTitleTextAttributes = [.foregroundColor: contrastColor]
+
+                // Apply the appearance settings
+                navBar.standardAppearance = appearance
+                navBar.scrollEdgeAppearance = appearance
+//                navBar.compactAppearance = appearance  // Optional, for smaller navbar styles
+                
+                // Tint color (affects back button and bar button items)
+                navBar.tintColor = contrastColor
+
+                // Set search bar color (if applicable)
+                searchBar.backgroundColor = color
+            }
+        }
+    }
+
+    /*
+     
+     
+     
+     override func viewWillAppear(_ animated: Bool) {
+     
+     
+     
+     ---- this is the old code
+     
+     // guard let navBar = navigationController?.navigationBar else {
+     
+     // fatalError("NavController doesn`t exist")
+     
+     // }
+     
+     
+     
+     // navBar.backgroundColor = UIColor(hexString: "1D9BF6")
+     
+     // navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+     
+     
+     
+     title = "Todey"
+     
+     
+     
+     let bar = UINavigationBarAppearance()
+     
+     
+     
+     bar.largeTitleTextAttributes = [.foregroundColor:UIColor.white]
+     
+     bar.backgroundColor = UIColor(hexString: "1D9BF6")
+     
+     navigationController?.navigationBar.standardAppearance = bar
+     
+     navigationController?.navigationBar.scrollEdgeAppearance = bar
+     
+     
+     
+     }
+     
+     
+     
+     
+     
+     in the TodoListViewController add:
+     
+     
+     */
+    /*
+     
+     
+     override func viewWillAppear(_ animated: Bool) {
+     
+     
+     
+     if let colorHex = selectedCategory?.color{
+     
+     
+     
+     title = selectedCategory!.title
+     
+     
+     
+     guard let navBar = navigationController?.navigationBar else {
+     
+     fatalError("NavController doesn`t exist")
+     
+     }
+     
+     
+     
+     if let navBarColor = UIColor(hexString: colorHex) {
+     
+     
+     
+     // navBar.backgroundColor = navBarColor
+     
+     
+     
+     // navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+     
+     
+     
+     navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+     
+     
+     
+     
+     
+     searchBar.barTintColor = navBarColor
+     
+     
+     
+     searchBar.searchTextField.backgroundColor = UIColor.white
+     
+     
+     
+     let bar = UINavigationBarAppearance()
+     
+     
+     
+     bar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+     
+     
+     
+     bar.backgroundColor = navBarColor
+     
+     navigationController?.navigationBar.standardAppearance = bar
+     
+     navigationController?.navigationBar.scrollEdgeAppearance = bar
+     
+     
+     
+     }
+     
+     }
+     
+     
+     
+     }
+     
+     */
     //
     //    //MARK: - UITableViewDataSource
     //
@@ -173,60 +360,60 @@ class ToDoListViewController: SwipeTableViewController  {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-//    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
-//        
-//        var textField = UITextField()
-//        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
-//        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-//            if let currentCategory = self.selectedCategory {
-//                do {
-//                    try self.realm.write {
-//                        let newItem = Item()
-//                        newItem.title = textField.text!
-//                        newItem.dateCreated = Date()
-//                        currentCategory.items.append(newItem)
-//                    }
-//                } catch {
-//                    print("Error saving new items, \(error)")
-//                }
-//            }
-//            self.tableView.reloadData()
-//        }
-//        alert.addTextField { (alertTextField) in
-//            alertTextField.placeholder = "Create new item"
-//            textField = alertTextField
-//        }
-//        alert.addAction(action)
-//        present(alert, animated: true, completion: nil)
-//    }
+    //    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+    //
+    //        var textField = UITextField()
+    //        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
+    //        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+    //            if let currentCategory = self.selectedCategory {
+    //                do {
+    //                    try self.realm.write {
+    //                        let newItem = Item()
+    //                        newItem.title = textField.text!
+    //                        newItem.dateCreated = Date()
+    //                        currentCategory.items.append(newItem)
+    //                    }
+    //                } catch {
+    //                    print("Error saving new items, \(error)")
+    //                }
+    //            }
+    //            self.tableView.reloadData()
+    //        }
+    //        alert.addTextField { (alertTextField) in
+    //            alertTextField.placeholder = "Create new item"
+    //            textField = alertTextField
+    //        }
+    //        alert.addAction(action)
+    //        present(alert, animated: true, completion: nil)
+    //    }
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
         
-                var textField = UITextField()
-                let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
-                let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-                    if let currentCategory = self.selectedCategory {
-                        do {
-                            try self.realm.write {
-                                let newItem = Item()
-                                newItem.title = textField.text!
-                                newItem.dateCreated = Date()
-                                currentCategory.items.append(newItem)
-                            }
-                        } catch {
-                            print("Error saving new items, \(error)")
-                        }
+        var textField = UITextField()
+        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            if let currentCategory = self.selectedCategory {
+                do {
+                    try self.realm.write {
+                        let newItem = Item()
+                        newItem.title = textField.text!
+                        newItem.dateCreated = Date()
+                        currentCategory.items.append(newItem)
                     }
-                    self.tableView.reloadData()
+                } catch {
+                    print("Error saving new items, \(error)")
                 }
-                alert.addTextField { (alertTextField) in
-                    alertTextField.placeholder = "Create new item"
-                    textField = alertTextField
-                }
-                alert.addAction(action)
-                present(alert, animated: true, completion: nil)
-
+            }
+            self.tableView.reloadData()
+        }
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create new item"
+            textField = alertTextField
+        }
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+        
     }
     //Mark - Model Manipulation Methods
     func loadItems() {

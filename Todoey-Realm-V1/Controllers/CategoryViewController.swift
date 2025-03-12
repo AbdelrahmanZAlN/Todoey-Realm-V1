@@ -26,7 +26,23 @@ class CategoryViewController: SwipeTableViewController {
         tableView.separatorStyle = .none
         loadCategories()
     }
-//    
+    override func viewWillAppear(_ animated: Bool) {
+        guard let navBar = navigationController?.navigationBar else {
+            fatalError("Navigation bar error")
+        }
+        let color = UIColor(hexString: "1D9BF6")
+        let contrastColor = ContrastColorOf(color!, returnFlat: true)
+
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = color
+        appearance.largeTitleTextAttributes = [.foregroundColor: contrastColor]
+
+        navBar.tintColor = contrastColor
+        navBar.standardAppearance = appearance
+        navBar.scrollEdgeAppearance = appearance
+    }
+//
 //    @IBAction func AddButtonPressed(_ sender: UIBarButtonItem) {
 //        var textField = UITextField()
 //        let alert = UIAlertController(title: "Add New Category", message: "", preferredStyle: .alert)
@@ -118,6 +134,7 @@ class CategoryViewController: SwipeTableViewController {
         let color = UIColor(hexString: categories?[indexPath.row].color ?? "#FFFFFF")
         cell.backgroundColor = color
         cell.textLabel?.textColor = ContrastColorOf(color!, returnFlat: true)
+        
         return cell
     }
     
